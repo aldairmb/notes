@@ -11,6 +11,19 @@
             <textarea name="content" id="content" required></textarea>
             <br>
 
+            <hr>
+            <h2>Share This Note (Optional)</h2>
+            <label for="email">Email of user to share with:</label>
+            <input type="email" name="email" id="email">
+            <br>
+
+            <label for="accessLevel">Access Level:</label>
+            <select name="accessLevel" id="accessLevel">
+                <option value="viewer">Viewer</option>
+                <option value="collaborator">Collaborator</option>
+            </select>
+            <br>
+
             <button type="submit">Add Note</button>
         </form>
     </div>

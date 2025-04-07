@@ -19,7 +19,7 @@ router.get('/add', (req, res) => {
 });
 
 router.post('/add', async (req, res) => {
-    const { title, content } = req.body;
+    const { title, content, email, accessLevel } = req.body;
     const userId = req.session.userId;
 
     try {
@@ -28,6 +28,20 @@ router.post('/add', async (req, res) => {
             [title, content, userId]
         );
         const noteId = result.rows[0].id;
+
+        // Optional: Share the note on creation
+        if (email && accessLevel) {
+            const userResult = await dbClient.query('SELECT id FROM users WHERE email = $1', [email]);
+            const sharedUser = userResult.rows[0];
+            if (sharedUser) {
+                await dbClient.query(`
+                    INSERT INTO shared_notes (note_id, shared_with_user_id, access_level, shared_by_user_id)
+                    VALUES ($1, $2, $3, $4)
+                    ON CONFLICT (note_id, shared_with_user_id) DO NOTHING
+                `, [noteId, sharedUser.id, accessLevel, userId]);
+            }
+        }
+
         res.redirect(`/notes/view/${noteId}`);
     } catch (error) {
         console.error('Error inserting note:', error);
@@ -95,7 +109,6 @@ router.get('/', async (req, res) => {
         res.status(500).send('Failed to fetch notes.');
     }
 });
-
 
 // Edit a note (only if owner)
 router.get('/edit/:id', async (req, res) => {
@@ -175,16 +188,14 @@ router.post('/delete/:id', async (req, res) => {
 router.post('/share/:id', async (req, res) => {
     const noteId = req.params.id;
     const userId = req.session.userId;
-    const { email, accessLevel } = req.body;  // Now including accessLevel
+    const { email, accessLevel } = req.body;
 
     try {
-        // Check if current user owns the note
         const result = await dbClient.query('SELECT * FROM notes WHERE id = $1 AND user_id = $2', [noteId, userId]);
         if (!result.rows[0]) {
             return res.status(403).send('You do not own this note.');
         }
 
-        // Find the user to share with by email
         const userResult = await dbClient.query('SELECT id FROM users WHERE email = $1', [email]);
         const sharedUser = userResult.rows[0];
 
@@ -192,7 +203,6 @@ router.post('/share/:id', async (req, res) => {
             return res.status(404).send('User not found.');
         }
 
-        // Insert into shared_notes with the selected access level
         await dbClient.query(`
             INSERT INTO shared_notes (note_id, shared_with_user_id, access_level, shared_by_user_id)
             VALUES ($1, $2, $3, $4)
