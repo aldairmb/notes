@@ -1,0 +1,21 @@
+
+
+<h1>Notes by <%= user.username %></h1>
+
+<% if (notes.length === 0) { %>
+    <p>This user has no notes.</p>
+<% } else { %>
+    <ul>
+        <% notes.forEach(note => { %>
+            <li style="margin-bottom: 1.5rem;">
+                <strong><%= note.title %></strong><br>
+                <small>Created: <%= new Date(note.created_at).toLocaleString() %></small>
+                <p><%= note.content %></p>
+            </li>
+        <% }) %>
+    </ul>
+<% } %>
+
+<a href="/admin">← Back to Admin Dashboard</a>
+
+<%- include('../partials/footer') %>
