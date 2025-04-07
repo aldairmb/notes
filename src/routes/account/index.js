@@ -7,7 +7,6 @@ const router = express.Router();
 router.get("/register", (req, res) => {
     res.render("account/register", { title: "Register" });
 });
-
 // 🔹 POST Register Form
 router.post("/register", async (req, res) => {
     const { username, email, password, confirm_password } = req.body;
@@ -17,29 +16,30 @@ router.post("/register", async (req, res) => {
         return res.status(400).send("❌ All fields are required.");
     }
 
-    // Check if passwords match
     if (password !== confirm_password) {
         return res.status(400).send("❌ Passwords do not match.");
     }
 
     try {
-        // Check if user already exists by email
         const existingUser = await findUserByEmail(email);
         if (existingUser) {
             return res.status(400).send("❌ Email is already in use.");
         }
 
-        // Create new user with username and password
+        // Create new user
         const newUser = await createUser(username, email, password);
-        
-        // Send only the message without the user data
-        res.status(201).send("✅ User registered successfully!");
+
+        // 🔐 Log them in by setting session
+        req.session.userId = newUser.id;
+        req.session.userRole = newUser.role;
+
+        // 👋 Redirect to homepage or notes
+        return res.redirect('/notes');
     } catch (error) {
         console.error(error);
         res.status(500).send("❌ Error registering user.");
     }
 });
-
 // 🔹 GET Login Page
 router.get("/login", (req, res) => {
     res.render("account/login", { title: "Login" });

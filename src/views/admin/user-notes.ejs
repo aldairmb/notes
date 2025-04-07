@@ -6,7 +6,11 @@
     <ul class="note-list">
         <% notes.forEach(note => { %>
             <li style="margin-bottom: 1.5rem;" class="note-item">
-                <strong><%= note.title %></strong><br>
+                <!-- Add a link to view the note -->
+                <a href="/notes/view/<%= note.id %>" class="note-link">
+                    <strong><%= note.title %></strong>
+                </a>
+                <br>
                 <small>Created: <%= new Date(note.created_at).toLocaleString() %></small>
                 <p><%= note.content %></p>
             </li>
