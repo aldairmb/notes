@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Note</title>
-</head>
-<body>
-    <h1>Edit Note: <%= note.title %></h1>
+<body class="edit-note-page">
+    <h1>Edit Note:</h1>
     
-    <!-- Update Note Form -->
-    <form action="/notes/edit/<%= note.id %>" method="POST">
+    <form action="/notes/edit/<%= note.id %>" method="POST" class="edit-note-form">
         <label for="title">Title:</label>
         <input type="text" name="title" id="title" value="<%= note.title %>" required>
         <br>
@@ -18,36 +10,28 @@
         <textarea name="content" id="content" required><%= note.content %></textarea>
         <br>
 
-        <button type="submit">Update Note</button>
+        <button type="submit" id="form-bt">Update Note</button>
     </form>
 
-    <!-- Delete Note -->
     <form action="/notes/delete/<%= note.id %>" method="POST" onsubmit="return confirm('Are you sure you want to delete this note?');">
-        <button type="submit">Delete Note</button>
+        <button type="submit" class="delete-bt" id="form-bt">Delete Note </button>
     </form>
 
     <hr>
-
-    <!-- Share Note by Email -->
     <h2>Share This Note</h2>
-    <form action="/notes/share/<%= note.id %>" method="POST">
+    <form action="/notes/share/<%= note.id %>" method="POST" class="share-note-form">
         <label for="email">Email of user to share with:</label>
         <input type="email" name="email" id="email" required>
         <br>
-
-        <!-- Select Access Level -->
+    
         <label for="accessLevel">Access Level:</label>
         <select name="accessLevel" id="accessLevel" required>
             <option value="viewer">Viewer</option>
             <option value="collaborator">Collaborator</option>
         </select>
         <br>
-
-        <button type="submit">Share Note</button>
+    
+        <button type="submit" id="form-bt">Share Note</button>
     </form>
-
-    <br>
-    <a href="/notes/view/<%= note.id %>">Back to Note</a>
-    <a href="/notes">Back to All Notes</a>
 </body>
-</html>
+

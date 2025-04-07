@@ -10,7 +10,7 @@ export const createUser = async (username, email, password) => {
         // Insert new user into DB with username
         const result = await dbClient.query(
             `INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email;`,
-            [username, email, hashedPassword]  // Make sure username is passed
+            [username, email, hashedPassword]
         );
         
         return result.rows[0];

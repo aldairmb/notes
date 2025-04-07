@@ -6,12 +6,14 @@ import path from "path";
 import { configureStaticPaths } from './src/utils/index.js';
 import { fileURLToPath } from 'url';
 import { testDatabase, setupDatabase } from './src/models/index.js';
+import { notFoundHandler, errorHandler } from './src/middleware/errorHandling.js';
 import notesRoutes from './src/routes/notes/index.js';  
 import accountRoute from './src/routes/account/index.js';
 import contactRoute from './src/routes/contact/index.js';
 import adminRoutes from './src/routes/admin/index.js';
 import dbClient from "./src/models/index.js";
 import session from 'express-session';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -68,6 +70,8 @@ app.use('/notes', notesRoutes);
 app.use('/contact', contactRoute);
 app.use('/account', accountRoute);
 app.use('/admin', adminRoutes);
+app.use(notFoundHandler); 
+app.use(errorHandler); 
 app.use('/', homeRoute);
 
 /**

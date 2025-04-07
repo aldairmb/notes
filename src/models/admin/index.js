@@ -1,7 +1,7 @@
 // src/routes/admin/index.js
 
 import express from 'express';
-import { getAllUsers, updateUserRole, deleteUserById } from '../../models/admin/index.js';  // Import admin functions
+import { getAllUsers, updateUserRole, deleteUserById } from '../../models/admin/index.js';
 
 const router = express.Router();
 

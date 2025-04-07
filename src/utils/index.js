@@ -46,8 +46,34 @@ const configureStaticPaths = (app) => {
  *
  * @returns {string} The navigation menu.
  */
-const getNav = () => {
-    return '';
-}
+// utils/index.js
+const getNav = (req) => {
+    const isLoggedIn = !!req.session?.userId;
+    const userRole = req.session?.userRole;
+    const isLoginOrRegisterPage = req.originalUrl === '/account/login' || req.originalUrl === '/account/register';
+
+    let navLinks = '';
+
+    // Don't display "My Notes" if on the login or register page
+    if (!isLoginOrRegisterPage) {
+        navLinks += `<a href="/notes">My Notes</a>`;
+    }
+
+    // If the user is an admin or owner, show the Admin link
+    if (userRole === 'admin' || userRole === 'owner') {
+        navLinks += `<a href="/admin">Admin</a>`;
+    }
+
+    // Add the logout link at the end, if logged in
+    if (isLoggedIn) {
+        navLinks += `<a href="/account/logout" class="logout-button">Logout</a>`;
+    }
+
+    return `
+        <nav>
+            ${navLinks}
+        </nav>
+    `;
+};
 
 export { configureStaticPaths, getNav };

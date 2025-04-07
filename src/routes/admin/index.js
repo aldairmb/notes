@@ -6,7 +6,7 @@ const router = express.Router();
 // Ensure the user is logged in and has admin or owner role
 router.use((req, res, next) => {
     if (!req.session.userId) {
-        return res.redirect('/account/login'); // Redirect to login page if not logged in
+        return res.redirect('/account/login');
     }
 
     const userId = req.session.userId;
@@ -14,7 +14,7 @@ router.use((req, res, next) => {
         .then((userResult) => {
             const user = userResult.rows[0];
             if (!user || (user.role !== 'admin' && user.role !== 'owner')) {
-                return res.status(403).send('You do not have permission to access this page.'); // Only admin or owner can access
+                return res.status(403).send('You do not have permission to access this page.');
             }
             next();
         })
@@ -27,7 +27,7 @@ router.use((req, res, next) => {
 // Admin Dashboard - list users and contact messages
 router.get('/', async (req, res) => {
     try {
-        const usersResult = await dbClient.query('SELECT id, username, email, role FROM users WHERE role != $1', ['owner']); // Exclude owner from the list
+        const usersResult = await dbClient.query('SELECT id, username, email, role FROM users WHERE role != $1', ['owner']);
         const messagesResult = await dbClient.query('SELECT * FROM contact_messages ORDER BY created_at DESC');
 
         res.render('admin/index', {

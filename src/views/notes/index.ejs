@@ -1,19 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notes</title>
-</head>
 <body>
     <h1>All Notes</h1>
-    <a href="/notes/add">Add New Note</a>
-    <ul>
+    <a href="/notes/add" class="add-new">Add New Note</a>
+    <ul class="note-list">
         <% notes.forEach(note => { %>
-            <li>
-                <a href="/notes/view/<%= note.id %>"><%= note.title %></a>
+            <li class="note-item">
+                <a href="/notes/view/<%= note.id %>" class="note-link"><%= note.title %></a>
+                <small>Created: <%= new Date(note.created_at).toLocaleString() %></small>
             </li>
         <% }); %>
     </ul>
+    
 </body>
-</html>

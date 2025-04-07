@@ -8,7 +8,7 @@ router.use((req, res, next) => {
     const protectedPaths = ['/add', '/edit', '/view', '/', '/share'];
     const requiresAuth = protectedPaths.some(path => req.path.startsWith(path));
     if (!req.session.userId && requiresAuth) {
-        return res.redirect('/account/login');  // Correct path
+        return res.redirect('/account/login');
     }
     next();
 });

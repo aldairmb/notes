@@ -66,9 +66,9 @@ router.post("/login", async (req, res) => {
 
         // Redirect based on the user's role
         if (user.role === 'admin' || user.role === 'owner') {
-            return res.redirect('/admin'); // Admin or owner goes to admin dashboard
+            return res.redirect('/admin');
         } else {
-            return res.redirect('/notes'); // Regular user goes to notes
+            return res.redirect('/notes');
         }
     } catch (error) {
         console.error(error);
@@ -83,7 +83,7 @@ router.get("/logout", (req, res) => {
             console.error("Error destroying session:", err);
             return res.status(500).send("❌ Error logging out.");
         }
-        res.redirect('/account/login'); // Redirect to the login page after logout
+        res.redirect('/account/login');
     });
 });
 
