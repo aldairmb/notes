@@ -71,24 +71,31 @@ router.get('/', async (req, res) => {
     const userId = req.session.userId;
 
     try {
-        const result = await dbClient.query(`
+        const ownedResult = await dbClient.query(`
             SELECT * FROM notes
             WHERE user_id = $1
-            OR id IN (
-                SELECT note_id FROM shared_notes WHERE shared_with_user_id = $1
-            )
             ORDER BY created_at DESC
+        `, [userId]);
+
+        const sharedResult = await dbClient.query(`
+            SELECT notes.*, shared_notes.access_level
+            FROM notes
+            JOIN shared_notes ON notes.id = shared_notes.note_id
+            WHERE shared_notes.shared_with_user_id = $1
+            ORDER BY notes.created_at DESC
         `, [userId]);
 
         res.render('notes/index', {
             title: 'Your Notes',
-            notes: result.rows,
+            ownedNotes: ownedResult.rows,
+            sharedNotes: sharedResult.rows,
         });
     } catch (error) {
         console.error('Error fetching notes:', error);
         res.status(500).send('Failed to fetch notes.');
     }
 });
+
 
 // Edit a note (only if owner)
 router.get('/edit/:id', async (req, res) => {

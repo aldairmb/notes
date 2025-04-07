@@ -1,13 +1,32 @@
 <body>
-    <h1>All Notes</h1>
+    <h1>Your Notes</h1>
     <a href="/notes/add" class="add-new">Add New Note</a>
-    <ul class="note-list">
-        <% notes.forEach(note => { %>
-            <li class="note-item">
-                <a href="/notes/view/<%= note.id %>" class="note-link"><%= note.title %></a>
-                <small>Created: <%= new Date(note.created_at).toLocaleString() %></small>
-            </li>
-        <% }); %>
-    </ul>
-    
+
+    <h2>Owned Notes</h2>
+    <% if (ownedNotes.length > 0) { %>
+        <ul class="note-list">
+            <% ownedNotes.forEach(note => { %>
+                <li class="note-item">
+                    <a href="/notes/view/<%= note.id %>" class="note-link"><%= note.title %></a>
+                    <small>Created: <%= new Date(note.created_at).toLocaleString() %></small>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>You have no notes yet.</p>
+    <% } %>
+
+    <h2>Shared With You</h2>
+    <% if (sharedNotes.length > 0) { %>
+        <ul class="note-list">
+            <% sharedNotes.forEach(note => { %>
+                <li class="note-item">
+                    <a href="/notes/view/<%= note.id %>" class="note-link"><%= note.title %></a>
+                    <small>Shared as: <%= note.access_level %> | Created: <%= new Date(note.created_at).toLocaleString() %></small>
+                </li>
+            <% }) %>
+        </ul>
+    <% } else { %>
+        <p>No notes have been shared with you.</p>
+    <% } %>
 </body>

@@ -78,6 +78,19 @@ router.post('/delete/:id', async (req, res) => {
     }
 });
 
+// Delete contact message
+router.post('/messages/delete/:id', async (req, res) => {
+    const messageId = req.params.id;
+
+    try {
+        await dbClient.query('DELETE FROM contact_messages WHERE id = $1', [messageId]);
+        res.redirect('/admin');
+    } catch (error) {
+        console.error('Error deleting contact message:', error);
+        res.status(500).send('Failed to delete contact message.');
+    }
+});
+
 // View all notes for a specific user (admin or owner-only)
 router.get('/user/:id/notes', async (req, res) => {
     const currentUserId = req.session.userId;
